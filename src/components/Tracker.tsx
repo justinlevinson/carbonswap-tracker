@@ -96,7 +96,7 @@ export const Tracker = () => {
     })
   }
   useEffect(() => {
-    const res = fetchdata()
+    fetchdata()
   }, [])
   
   const makeDataForPair = (pair: string) => {
