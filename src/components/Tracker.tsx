@@ -102,7 +102,7 @@ export const Tracker = () => {
   const makeDataForPair = (pair: string) => {
     if(trackingData && trackingData.pairs && trackingData.pairs[pair]) {
       const pairData = trackingData.pairs[pair]
-      const pairPrice = pair === "EWT-DAI" ? pairData.ewtPrice.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 6}) : pairData.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 6})
+      const pairPrice = pair === "EWT-DAI" ? pairData.ewtPrice?.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 6}) : pairData.price?.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 6})
       const nonEwtHalf = pairData.bals.filter((p => {
         return p.symbol !== "WEWT"
       }))[0]
