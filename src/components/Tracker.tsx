@@ -64,13 +64,7 @@ interface ITrackingDataPairs {
 interface ITrackingDataPair {
   ewtPrice: number
   price: number
-  bals: ITrackingDataBal[]
-}
-
-interface ITrackingDataBal {
-  decimals: number
-  balance: number
-  symbol: string
+  liq: number
 }
 
 export const Tracker = () => {
@@ -80,6 +74,7 @@ export const Tracker = () => {
     const res = await axios.get('https://carbonswap-tracking.s3.amazonaws.com/latest.json')
     const jsondata = res.data 
     const pairs = jsondata?.data as ITrackingDataPairs
+    console.log(pairs)
 
     const parsedPairs: ITrackingDataPairs = {} as ITrackingDataPairs
 
@@ -101,21 +96,18 @@ export const Tracker = () => {
   
   const makeDataForPair = (pair: string) => {
     if(trackingData && trackingData.pairs && trackingData.pairs[pair]) {
+      
       const pairData = trackingData.pairs[pair]
-      const pairPrice = pair === "EWT-DAI" ? pairData.ewtPrice?.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 6}) : pairData.price?.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 6})
-      const nonEwtHalf = pairData.bals.filter((p => {
-        return p.symbol !== "WEWT"
-      }))[0]
-      const ewtHalf = pairData.bals.filter((p => {
-        return p.symbol === "WEWT"
-      }))[0]
-
-      console.log(ewtHalf)
-      console.log(nonEwtHalf)
-      const pairLiquidity = pair === "EWT-DAI" ?
-        (ewtHalf.balance / Math.pow(10, 18)).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 6})
-        :
-        (nonEwtHalf.balance / Math.pow(10, 18)).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 6})
+      console.log(pairData)
+      const pairPrice = pairData.price?.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 6})
+      const pairLiquidity = pairData.liq.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 6})
+      //   (ewtHalf.balance / Math.pow(10, 18)).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 6})
+      //   :
+      //   (nonEwtHalf.balance / Math.pow(10, 18)).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 6})
+      // const pairLiquidity = pair === "EWT-DAI" ?
+      //   (ewtHalf.balance / Math.pow(10, 18)).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 6})
+      //   :
+      //   (nonEwtHalf.balance / Math.pow(10, 18)).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 6})
         return { price: pairPrice, liq: pairLiquidity}
     }
     return { price: "--", liq: "--"}
@@ -129,30 +121,30 @@ export const Tracker = () => {
           <PairPrice>Price (US$)</PairPrice>
           <PairLiquidity>Liquidity in pool</PairLiquidity>
         </TableHeader>
-        <TableRow>
+        {/* <TableRow>
           <PairName>EWT</PairName>
           <PairPrice>{makeDataForPair("EWT-DAI").price}</PairPrice>
           <PairLiquidity>{makeDataForPair("EWT-DAI").liq} EWT</PairLiquidity>
-        </TableRow>
+        </TableRow> */}
         <TableRow>
           <PairName>OCEAN</PairName>
-          <PairPrice>{makeDataForPair("EWT-OCEAN").price}</PairPrice>
-          <PairLiquidity>{makeDataForPair("EWT-OCEAN").liq} OCEAN</PairLiquidity>
+          <PairPrice>{makeDataForPair("OCEAN").price}</PairPrice>
+          <PairLiquidity>{makeDataForPair("OCEAN").liq} OCEAN</PairLiquidity>
         </TableRow>
         <TableRow>
           <PairName>SLR</PairName>
-          <PairPrice>{makeDataForPair("EWT-SLR").price}</PairPrice>
-          <PairLiquidity>{makeDataForPair("EWT-SLR").liq} SLR</PairLiquidity>
+          <PairPrice>{makeDataForPair("SLR").price}</PairPrice>
+          <PairLiquidity>{makeDataForPair("SLR").liq} SLR</PairLiquidity>
         </TableRow>
         <TableRow>
           <PairName>SMUDGE</PairName>
-          <PairPrice>{makeDataForPair("EWT-SMUDGE").price}</PairPrice>
-          <PairLiquidity>{makeDataForPair("EWT-SMUDGE").liq} SMUDGE</PairLiquidity>
+          <PairPrice>{makeDataForPair("SMUDGE").price}</PairPrice>
+          <PairLiquidity>{makeDataForPair("SMUDGE").liq} SMUDGE</PairLiquidity>
         </TableRow>
         <TableRow>
           <PairName>SUSU</PairName>
-          <PairPrice>{makeDataForPair("EWT-SUSU").price}</PairPrice>
-          <PairLiquidity>{makeDataForPair("EWT-SUSU").liq} SUSU</PairLiquidity>
+          <PairPrice>{makeDataForPair("SUSU").price}</PairPrice>
+          <PairLiquidity>{makeDataForPair("SUSU").liq} SUSU</PairLiquidity>
         </TableRow>
         <LastUpdated>Last updated: {trackingData && trackingData.lastUpdated}</LastUpdated>
       </Table>
